@@ -1,45 +1,102 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Colour by Lines</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Colour by Lines | Download. Print. Colour.</title>
 <style>
-body{margin:0;font-family:Arial,sans-serif;background:#f7f8f4;color:#202820}
-header{background:#fff;border-bottom:1px solid #ddd}.nav{max-width:1100px;margin:auto;padding:18px 22px;display:flex;justify-content:space-between}.logo{font-size:28px;font-weight:800}.logo span{font-weight:400}
-.hero{max-width:1100px;margin:25px auto;padding:60px 22px;text-align:center;background:#e9f0df;border-radius:25px}.hero h1{font-size:60px;margin:0}.hero p{font-size:20px}
-section{max-width:1100px;margin:45px auto;padding:0 22px}.products{display:grid;grid-template-columns:1fr 1fr;gap:25px}
-.card{background:#fff;border:1px solid #ddd;border-radius:18px;overflow:hidden}.card img{width:100%;display:block}.body{padding:22px}.price{font-size:24px;font-weight:bold;margin:15px 0}
-.buy{display:block;width:100%;padding:15px;border:0;border-radius:10px;background:#202820;color:#fff;font-weight:bold;font-size:16px;cursor:pointer}
-.note{text-align:center;color:#666}.badge{display:inline-block;background:#e9f0df;padding:6px 10px;border-radius:20px;font-size:12px;font-weight:bold}
-footer{margin-top:60px;background:#202820;color:#fff;text-align:center;padding:35px}
-@media(max-width:700px){.products{grid-template-columns:1fr}.hero h1{font-size:43px}}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;color:#202820;background:#fafaf7}
+header{background:#fff;border-bottom:1px solid #e4e4df}
+.nav{max-width:1150px;margin:auto;padding:18px 22px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:30px;font-weight:800;letter-spacing:-1.2px}.logo span{font-weight:400}
+nav a{margin-left:24px;text-decoration:none;color:#202820;font-weight:700}
+.hero{max-width:1150px;margin:28px auto;padding:75px 28px;border-radius:28px;background:#e9f0df;text-align:center}
+.hero h1{font-size:clamp(42px,7vw,76px);margin:0 0 12px;letter-spacing:-2px}
+.hero h1 span{font-weight:400}
+.hero .tag{font-size:24px;font-weight:700;margin:0 0 12px}
+.hero p{font-size:18px;line-height:1.6;max-width:650px;margin:0 auto 28px;color:#4b554a}
+.btn{display:inline-block;background:#202820;color:#fff;text-decoration:none;padding:15px 25px;border-radius:11px;font-weight:800}
+section{max-width:1150px;margin:55px auto;padding:0 22px}
+h2{text-align:center;font-size:34px;margin-bottom:12px}
+.intro{text-align:center;color:#626860;max-width:650px;margin:0 auto 30px;line-height:1.6}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.card{background:#fff;border:1px solid #e1e1dc;border-radius:18px;padding:25px;text-align:center}
+.icon{font-size:45px;margin-bottom:10px}
+.card h3{margin:8px 0;font-size:21px}
+.card p{color:#666;line-height:1.5}
+.feature{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center}
+.feature-box{background:#fff;border:1px solid #ddd;border-radius:20px;padding:18px}
+.feature-box img{width:100%;display:block;border-radius:12px}
+.feature-text h2{text-align:left}
+.price{font-size:24px;font-weight:800;margin:15px 0}
+footer{background:#202820;color:#fff;text-align:center;padding:40px 22px;margin-top:70px}
+footer p{margin:7px 0;color:#dce3d8}
+@media(max-width:750px){
+ nav{display:none}.hero{margin:15px 12px;padding:55px 20px}
+ .cards,.feature{grid-template-columns:1fr}
+ section{margin:40px auto}
+ .feature-text h2{text-align:center}
+}
 </style>
 </head>
 <body>
-<header><div class="nav"><div class="logo">Colour <span>by</span> Lines</div><div>Download. Print. Colour.</div></div></header>
-<div class="hero"><h1>Colour <span style="font-weight:400">by</span> Lines</h1><p>Printable colouring pages for everyone.</p></div>
-<section>
-<h2>Tractors & Farm Machines</h2>
-<p class="note">Secure checkout is powered by PayPal. After a successful payment, the server can deliver the purchased PDF.</p>
-<div class="products">
-<article class="card"><img src="page-1.png" alt="John Deere 8R 250 colouring page"><div class="body">
-<span class="badge">PAGE 1</span><h2>John Deere 8R 250 Tractor</h2><p>Printable digital colouring page.</p><div class="price">$1.00</div>
-<button class="buy" onclick="buy('page1')">Buy & Download</button></div></article>
-<article class="card"><img src="page-2.png" alt="John Deere 7R colouring page"><div class="body">
-<span class="badge">PAGE 2</span><h2>John Deere 7R Tractor</h2><p>Printable digital colouring page.</p><div class="price">$1.00</div>
-<button class="buy" onclick="buy('page2')">Buy & Download</button></div></article>
+
+<header>
+<div class="nav">
+<div class="logo">Colour <span>by</span> Lines</div>
+<nav>
+<a href="#shop">Shop</a>
+<a href="#how">How It Works</a>
+<a href="#about">About</a>
+</nav>
+</div>
+</header>
+
+<main>
+<section class="hero">
+<h1>Colour <span>by</span> Lines</h1>
+<p class="tag">Download. Print. Colour.</p>
+<p>Fun printable colouring pages for kids, families and anyone who loves tractors, trucks, farming, animals and machines.</p>
+<a class="btn" href="#shop">Explore Colouring Pages</a>
+</section>
+
+<section id="how">
+<h2>Colouring Made Easy</h2>
+<p class="intro">Get your favourite designs digitally, print them at home, and start colouring.</p>
+<div class="cards">
+<div class="card"><div class="icon">🖨️</div><h3>1. Choose</h3><p>Pick a colouring page or bundle from our shop.</p></div>
+<div class="card"><div class="icon">⬇️</div><h3>2. Download</h3><p>Get your printable digital file after purchase.</p></div>
+<div class="card"><div class="icon">🖍️</div><h3>3. Colour</h3><p>Print it, grab your crayons or pencils, and have fun.</p></div>
 </div>
 </section>
-<footer>Colour by Lines · Download. Print. Colour.</footer>
-<script>
-async function buy(product){
-  const button=event.currentTarget; button.disabled=true; button.textContent='Opening checkout...';
-  try{
-    const r=await fetch('/api/create-order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({product})});
-    const data=await r.json();
-    if(!r.ok) throw new Error(data.error||'Checkout could not be started.');
-    window.location.href=data.approvalUrl;
-  }catch(e){alert(e.message);button.disabled=false;button.textContent='Buy & Download';}
-}
-</script>
-</body></html>
+
+<section id="shop">
+<div class="feature">
+<div class="feature-box">
+<img src="page1.png" alt="Tractor colouring page">
+</div>
+<div class="feature-text">
+<h2>Featured: Tractors & Farm Machines</h2>
+<p>Our first collection brings detailed farm machinery to life as printable colouring pages.</p>
+<p>More tractors, trucks and farm scenes are coming soon.</p>
+<div class="price">From $1.00</div>
+<a class="btn" href="#shop">Shop the Collection</a>
+</div>
+</div>
+</section>
+
+<section id="about">
+<h2>Welcome to Colour by Lines</h2>
+<p class="intro">We make detailed, printable colouring pages that turn favourite machines and everyday scenes into something creative and fun. New designs and bundles will be added regularly.</p>
+</section>
+</main>
+
+<footer>
+<strong>Colour by Lines</strong>
+<p>Download. Print. Colour.</p>
+<p>© 2026 Colour by Lines</p>
+</footer>
+
+</body>
+</html>
