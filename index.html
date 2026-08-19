@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Colour by Lines</title>
+<style>
+body{margin:0;font-family:Arial,sans-serif;background:#f7f8f4;color:#202820}
+header{background:#fff;border-bottom:1px solid #ddd}.nav{max-width:1100px;margin:auto;padding:18px 22px;display:flex;justify-content:space-between}.logo{font-size:28px;font-weight:800}.logo span{font-weight:400}
+.hero{max-width:1100px;margin:25px auto;padding:60px 22px;text-align:center;background:#e9f0df;border-radius:25px}.hero h1{font-size:60px;margin:0}.hero p{font-size:20px}
+section{max-width:1100px;margin:45px auto;padding:0 22px}.products{display:grid;grid-template-columns:1fr 1fr;gap:25px}
+.card{background:#fff;border:1px solid #ddd;border-radius:18px;overflow:hidden}.card img{width:100%;display:block}.body{padding:22px}.price{font-size:24px;font-weight:bold;margin:15px 0}
+.buy{display:block;width:100%;padding:15px;border:0;border-radius:10px;background:#202820;color:#fff;font-weight:bold;font-size:16px;cursor:pointer}
+.note{text-align:center;color:#666}.badge{display:inline-block;background:#e9f0df;padding:6px 10px;border-radius:20px;font-size:12px;font-weight:bold}
+footer{margin-top:60px;background:#202820;color:#fff;text-align:center;padding:35px}
+@media(max-width:700px){.products{grid-template-columns:1fr}.hero h1{font-size:43px}}
+</style>
+</head>
+<body>
+<header><div class="nav"><div class="logo">Colour <span>by</span> Lines</div><div>Download. Print. Colour.</div></div></header>
+<div class="hero"><h1>Colour <span style="font-weight:400">by</span> Lines</h1><p>Printable colouring pages for everyone.</p></div>
+<section>
+<h2>Tractors & Farm Machines</h2>
+<p class="note">Secure checkout is powered by PayPal. After a successful payment, the server can deliver the purchased PDF.</p>
+<div class="products">
+<article class="card"><img src="page-1.png" alt="John Deere 8R 250 colouring page"><div class="body">
+<span class="badge">PAGE 1</span><h2>John Deere 8R 250 Tractor</h2><p>Printable digital colouring page.</p><div class="price">$1.00</div>
+<button class="buy" onclick="buy('page1')">Buy & Download</button></div></article>
+<article class="card"><img src="page-2.png" alt="John Deere 7R colouring page"><div class="body">
+<span class="badge">PAGE 2</span><h2>John Deere 7R Tractor</h2><p>Printable digital colouring page.</p><div class="price">$1.00</div>
+<button class="buy" onclick="buy('page2')">Buy & Download</button></div></article>
+</div>
+</section>
+<footer>Colour by Lines · Download. Print. Colour.</footer>
+<script>
+async function buy(product){
+  const button=event.currentTarget; button.disabled=true; button.textContent='Opening checkout...';
+  try{
+    const r=await fetch('/api/create-order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({product})});
+    const data=await r.json();
+    if(!r.ok) throw new Error(data.error||'Checkout could not be started.');
+    window.location.href=data.approvalUrl;
+  }catch(e){alert(e.message);button.disabled=false;button.textContent='Buy & Download';}
+}
+</script>
+</body></html>
