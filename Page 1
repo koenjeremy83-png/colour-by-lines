@@ -1,0 +1,5 @@
+page1: {
+  name: "John Deere 8R 250 Tractor",
+  price: "1.00",
+  file: "page-1.png"
+}
