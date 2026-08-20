@@ -11,14 +11,16 @@ const PRODUCTS = {
   page1: {
   name: "John Deere 8R 250 Tractor",
   price: "1.00",
-  file: "Page 1.png"
+  file: "page-1.png"
 },
 page2: {
   name: "John Deere 7R Tractor",
   price: "1.00",
-  file: "Page 2.png"
+  file: "page-2.png"
 }
-};
+  
+},
+  
 
 const PAYPAL_BASE =
   process.env.PAYPAL_BASE_URL ||
