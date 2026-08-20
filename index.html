@@ -4,99 +4,504 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Colour by Lines | Download. Print. Colour.</title>
+
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:Arial,Helvetica,sans-serif;color:#202820;background:#fafaf7}
-header{background:#fff;border-bottom:1px solid #e4e4df}
-.nav{max-width:1150px;margin:auto;padding:18px 22px;display:flex;align-items:center;justify-content:space-between}
-.logo{font-size:30px;font-weight:800;letter-spacing:-1.2px}.logo span{font-weight:400}
-nav a{margin-left:24px;text-decoration:none;color:#202820;font-weight:700}
-.hero{max-width:1150px;margin:28px auto;padding:75px 28px;border-radius:28px;background:#e9f0df;text-align:center}
-.hero h1{font-size:clamp(42px,7vw,76px);margin:0 0 12px;letter-spacing:-2px}
-.hero h1 span{font-weight:400}
-.hero .tag{font-size:24px;font-weight:700;margin:0 0 12px}
-.hero p{font-size:18px;line-height:1.6;max-width:650px;margin:0 auto 28px;color:#4b554a}
-.btn{display:inline-block;background:#202820;color:#fff;text-decoration:none;padding:15px 25px;border-radius:11px;font-weight:800}
-section{max-width:1150px;margin:55px auto;padding:0 22px}
-h2{text-align:center;font-size:34px;margin-bottom:12px}
-.intro{text-align:center;color:#626860;max-width:650px;margin:0 auto 30px;line-height:1.6}
-.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-.card{background:#fff;border:1px solid #e1e1dc;border-radius:18px;padding:25px;text-align:center}
-.icon{font-size:45px;margin-bottom:10px}
-.card h3{margin:8px 0;font-size:21px}
-.card p{color:#666;line-height:1.5}
-.feature{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center}
-.feature-box{background:#fff;border:1px solid #ddd;border-radius:20px;padding:18px}
-.feature-box img{width:100%;display:block;border-radius:12px}
-.feature-text h2{text-align:left}
-.price{font-size:24px;font-weight:800;margin:15px 0}
-footer{background:#202820;color:#fff;text-align:center;padding:40px 22px;margin-top:70px}
-footer p{margin:7px 0;color:#dce3d8}
+
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  color:#202820;
+  background:#fafaf7;
+}
+
+header{
+  background:#fff;
+  border-bottom:1px solid #e4e4df;
+}
+
+.nav{
+  max-width:1150px;
+  margin:auto;
+  padding:18px 22px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.logo{
+  font-size:30px;
+  font-weight:800;
+}
+
+.logo span{
+  font-weight:400;
+}
+
+nav a{
+  margin-left:24px;
+  text-decoration:none;
+  color:#202820;
+  font-weight:700;
+}
+
+.hero{
+  max-width:1150px;
+  margin:28px auto;
+  padding:70px 25px;
+  border-radius:28px;
+  background:#e9f0df;
+  text-align:center;
+}
+
+.hero h1{
+  font-size:clamp(42px,7vw,76px);
+  margin:0 0 12px;
+}
+
+.hero h1 span{
+  font-weight:400;
+}
+
+.hero .tag{
+  font-size:24px;
+  font-weight:700;
+}
+
+.hero p{
+  max-width:650px;
+  margin:0 auto 28px;
+  line-height:1.6;
+  color:#4b554a;
+}
+
+.btn,
+.buy{
+  display:inline-block;
+  background:#202820;
+  color:white;
+  padding:15px 25px;
+  border-radius:11px;
+  font-weight:800;
+  border:0;
+  cursor:pointer;
+  text-decoration:none;
+  font-size:16px;
+}
+
+section{
+  max-width:1150px;
+  margin:55px auto;
+  padding:0 22px;
+}
+
+h2{
+  text-align:center;
+  font-size:34px;
+  margin-bottom:12px;
+}
+
+.intro{
+  text-align:center;
+  color:#626860;
+  max-width:650px;
+  margin:0 auto 30px;
+  line-height:1.6;
+}
+
+.products{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:25px;
+}
+
+.product{
+  background:white;
+  border:1px solid #ddd;
+  border-radius:20px;
+  overflow:hidden;
+  box-shadow:0 5px 20px rgba(0,0,0,.06);
+}
+
+.product img{
+  width:100%;
+  display:block;
+}
+
+.product-info{
+  padding:22px;
+}
+
+.badge{
+  display:inline-block;
+  background:#e9f0df;
+  padding:7px 11px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:800;
+}
+
+.product h3{
+  font-size:25px;
+  margin:14px 0 8px;
+}
+
+.product p{
+  color:#626860;
+  line-height:1.5;
+}
+
+.price{
+  font-size:25px;
+  font-weight:800;
+  margin:18px 0;
+}
+
+.buy{
+  width:100%;
+}
+
+.buy:hover{
+  opacity:.9;
+}
+
+.steps{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:20px;
+}
+
+.step{
+  background:white;
+  border:1px solid #ddd;
+  border-radius:18px;
+  padding:25px;
+  text-align:center;
+}
+
+.step-icon{
+  font-size:45px;
+}
+
+.step h3{
+  margin:10px 0;
+}
+
+.step p{
+  color:#666;
+  line-height:1.5;
+}
+
+.bundle{
+  background:#e9f0df;
+  border-radius:20px;
+  padding:30px;
+  text-align:center;
+}
+
+footer{
+  background:#202820;
+  color:white;
+  text-align:center;
+  padding:40px 22px;
+  margin-top:70px;
+}
+
+footer p{
+  color:#dce3d8;
+}
+
 @media(max-width:750px){
- nav{display:none}.hero{margin:15px 12px;padding:55px 20px}
- .cards,.feature{grid-template-columns:1fr}
- section{margin:40px auto}
- .feature-text h2{text-align:center}
+  nav{display:none}
+
+  .hero{
+    margin:15px 12px;
+    padding:50px 20px;
+  }
+
+  .products,
+  .steps{
+    grid-template-columns:1fr;
+  }
 }
 </style>
 </head>
+
 <body>
 
 <header>
 <div class="nav">
-<div class="logo">Colour <span>by</span> Lines</div>
+
+<div class="logo">
+Colour <span>by</span> Lines
+</div>
+
 <nav>
 <a href="#shop">Shop</a>
 <a href="#how">How It Works</a>
-<a href="#about">About</a>
+<a href="#bundles">Bundles</a>
 </nav>
+
 </div>
 </header>
 
 <main>
+
 <section class="hero">
-<h1>Colour <span>by</span> Lines</h1>
-<p class="tag">Download. Print. Colour.</p>
-<p>Fun printable colouring pages for kids, families and anyone who loves tractors, trucks, farming, animals and machines.</p>
-<a class="btn" href="#shop">Explore Colouring Pages</a>
+
+<h1>
+Colour <span>by</span> Lines
+</h1>
+
+<p class="tag">
+Download. Print. Colour.
+</p>
+
+<p>
+Fun printable colouring pages for kids, families and anyone who loves tractors, trucks, farming, animals and machines.
+</p>
+
+<a class="btn" href="#shop">
+Shop Colouring Pages
+</a>
+
 </section>
 
-<section id="how">
-<h2>Colouring Made Easy</h2>
-<p class="intro">Get your favourite designs digitally, print them at home, and start colouring.</p>
-<div class="cards">
-<div class="card"><div class="icon">🖨️</div><h3>1. Choose</h3><p>Pick a colouring page or bundle from our shop.</p></div>
-<div class="card"><div class="icon">⬇️</div><h3>2. Download</h3><p>Get your printable digital file after purchase.</p></div>
-<div class="card"><div class="icon">🖍️</div><h3>3. Colour</h3><p>Print it, grab your crayons or pencils, and have fun.</p></div>
-</div>
-</section>
 
 <section id="shop">
-<div class="feature">
-<div class="feature-box">
-<img src="page1.png" alt="Tractor colouring page">
+
+<h2>
+🚜 Tractors & Farm Machines
+</h2>
+
+<p class="intro">
+Choose your favourite colouring page, purchase it, download it and start colouring.
+</p>
+
+
+<div class="products">
+
+
+<!-- PAGE 1 -->
+
+<div class="product">
+
+<img
+src="page-1.png"
+alt="John Deere 8R 250 tractor colouring page"
+>
+
+<div class="product-info">
+
+<span class="badge">
+PAGE 1 · DIGITAL DOWNLOAD
+</span>
+
+<h3>
+John Deere 8R 250 Tractor
+</h3>
+
+<p>
+Detailed printable tractor colouring page.
+Perfect for tractor fans and farming lovers.
+</p>
+
+<div class="price">
+$1.00
 </div>
-<div class="feature-text">
-<h2>Featured: Tractors & Farm Machines</h2>
-<p>Our first collection brings detailed farm machinery to life as printable colouring pages.</p>
-<p>More tractors, trucks and farm scenes are coming soon.</p>
-<div class="price">From $1.00</div>
-<a class="btn" href="#shop">Shop the Collection</a>
+
+<button
+class="buy"
+onclick="buyProduct('page1', this)"
+>
+Buy & Download
+</button>
+
 </div>
+
 </div>
+
+
+<!-- PAGE 2 -->
+
+<div class="product">
+
+<img
+src="page-2.png"
+alt="John Deere 7R tractor colouring page"
+>
+
+<div class="product-info">
+
+<span class="badge">
+PAGE 2 · DIGITAL DOWNLOAD
+</span>
+
+<h3>
+John Deere 7R Tractor
+</h3>
+
+<p>
+Detailed printable tractor colouring page.
+Print it at home and start colouring.
+</p>
+
+<div class="price">
+$1.00
+</div>
+
+<button
+class="buy"
+onclick="buyProduct('page2', this)"
+>
+Buy & Download
+</button>
+
+</div>
+
+</div>
+
+</div>
+
 </section>
 
-<section id="about">
-<h2>Welcome to Colour by Lines</h2>
-<p class="intro">We make detailed, printable colouring pages that turn favourite machines and everyday scenes into something creative and fun. New designs and bundles will be added regularly.</p>
+
+<section id="bundles">
+
+<h2>
+🎁 Tractor Bundle
+</h2>
+
+<div class="bundle">
+
+<h3>
+Tractors & Farm Machines — 10 Page Bundle
+</h3>
+
+<p>
+Get 10 printable tractor and farm-machine colouring pages together at a special bundle price.
+</p>
+
+<div class="price">
+$4.99
+</div>
+
+<p>
+<strong>Coming soon</strong>
+</p>
+
+</div>
+
 </section>
+
+
+<section id="how">
+
+<h2>
+How It Works
+</h2>
+
+<p class="intro">
+Three simple steps from Colour by Lines to your colouring page.
+</p>
+
+<div class="steps">
+
+<div class="step">
+<div class="step-icon">🖼️</div>
+<h3>1. Choose</h3>
+<p>
+Choose your favourite colouring page.
+</p>
+</div>
+
+<div class="step">
+<div class="step-icon">💳</div>
+<h3>2. Buy & Download</h3>
+<p>
+Complete checkout and receive your digital colouring page.
+</p>
+</div>
+
+<div class="step">
+<div class="step-icon">🖍️</div>
+<h3>3. Colour</h3>
+<p>
+Print your page and start colouring!
+</p>
+</div>
+
+</div>
+
+</section>
+
 </main>
 
+
 <footer>
+
 <strong>Colour by Lines</strong>
-<p>Download. Print. Colour.</p>
-<p>© 2026 Colour by Lines</p>
+
+<p>
+Download. Print. Colour.
+</p>
+
+<p>
+© 2026 Colour by Lines
+</p>
+
 </footer>
+
+
+<script>
+
+async function buyProduct(product, button){
+
+button.disabled=true;
+
+button.textContent="Opening checkout...";
+
+try{
+
+const response=await fetch(
+"/api/create-order",
+{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+product:product
+})
+}
+);
+
+const data=await response.json();
+
+if(!response.ok){
+
+throw new Error(
+data.error ||
+"Checkout could not be started."
+);
+
+}
+
+window.location.href=data.approvalUrl;
+
+}catch(error){
+
+alert(error.message);
+
+button.disabled=false;
+
+button.textContent="Buy & Download";
+
+}
+
+}
+
+</script>
 
 </body>
 </html>
