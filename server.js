@@ -23,6 +23,9 @@ page2: {
 const PAYPAL_BASE =
   process.env.PAYPAL_BASE_URL ||
   "https://api-m.sandbox.paypal.com";
+console.log("PayPal Client ID loaded:", !!process.env.PAYPAL_CLIENT_ID);
+console.log("PayPal Secret loaded:", !!process.env.PAYPAL_CLIENT_SECRET);
+console.log("PayPal Base URL:", PAYPAL_BASE);
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
