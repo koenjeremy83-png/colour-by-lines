@@ -694,14 +694,31 @@ Return to Colour by Lines
 
 
 // START SERVER
-app.listen(
-  PORT,
-  "0.0.0.0",
-  () => {
+app.get("/download/page1", (req, res) => {
 
-    console.log(
-      `Colour by Lines running on port ${PORT}`
-    );
+  const filePath = path.join(
+    __dirname,
+    "page-1-tractor-colouring-page.pdf"
+  );
 
-  }
-);
+  res.download(
+    filePath,
+    "Colour-by-Lines-Page-1.pdf",
+    (error) => {
+
+      if (error) {
+        console.error(
+          "Page 1 download error:",
+          error
+        );
+
+        if (!res.headersSent) {
+          res.status(404).send(
+            "Page 1 PDF could not be found on the server."
+          );
+        }
+      }
+
+    }
+  );
+});
