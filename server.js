@@ -218,3 +218,33 @@ app.post("/api/create-order", async (req, res) => {
     });
   }
 });
+app.get("/paypal-cancel", (req, res) => {
+  res.send(`
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Payment Cancelled | Colour by Lines</title>
+</head>
+
+<body style="font-family:Arial;text-align:center;padding:50px;">
+
+<h1>Payment Cancelled</h1>
+
+<p>No payment was taken.</p>
+
+<a href="/">
+Return to Colour by Lines
+</a>
+
+</body>
+</html>
+  `);
+});
+
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(
+    `Colour by Lines running on port ${PORT}`
+  );
+});
