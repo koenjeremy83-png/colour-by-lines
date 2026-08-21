@@ -218,33 +218,196 @@ app.post("/api/create-order", async (req, res) => {
     });
   }
 });
-app.get("/paypal-cancel", (req, res) => {
-  res.send(`
+app.get("/paypal-success", async (req, res) => {
+  try {
+    const orderId = req.query.token;
+
+    if (!orderId) {
+      return res.status(400).send("Missing PayPal order ID.");
+    }
+
+    const clientId = process.env.PAYPAL_CLIENT_ID;
+    const clientSecret = process.env.PAYPAL_CLIENT_SECRET;
+
+    const paypalBase =
+      process.env.PAYPAL_BASE_URL ||
+      "https://api-m.sandbox.paypal.com";
+
+    if (!clientId || !clientSecret) {
+      return res.status(500).send(
+        "PayPal is not configured."
+      );
+    }
+
+    const auth = Buffer
+      .from(`${clientId}:${clientSecret}`)
+      .toString("base64");
+
+    // Get PayPal access token
+    const tokenResponse = await fetch(
+      `${paypalBase}/v1/oauth2/token`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Basic ${auth}`,
+          "Content-Type":
+            "application/x-www-form-urlencoded"
+        },
+        body:
+          "grant_type=client_credentials"
+      }
+    );
+
+    const tokenData =
+      await tokenResponse.json();
+
+    if (!tokenResponse.ok) {
+      console.error(
+        "PayPal authentication failed:",
+        tokenData
+      );
+
+      return res.status(502).send(
+        "PayPal authentication failed."
+      );
+    }
+
+    // Capture the approved payment
+    const captureResponse = await fetch(
+      `${paypalBase}/v2/checkout/orders/${orderId}/capture`,
+      {
+        method: "POST",
+        headers: {
+          Authorization:
+            `Bearer ${tokenData.access_token}`,
+          "Content-Type": "application/json"
+        }
+      }
+    );
+
+    const captureData =
+      await captureResponse.json();
+
+    if (!captureResponse.ok) {
+      console.error(
+        "PayPal capture failed:",
+        captureData
+      );
+
+      return res.status(502).send(
+        "PayPal payment could not be completed."
+      );
+    }
+
+    if (captureData.status !== "COMPLETED") {
+      return res.status(400).send(`
+        <h1>Payment not completed</h1>
+        <p>PayPal payment status: ${captureData.status}</p>
+        <a href="/">Return to Colour by Lines</a>
+      `);
+    }
+
+    const productId =
+      captureData.purchase_units?.[0]?.reference_id;
+
+    const product = PRODUCTS[productId];
+
+    if (!product) {
+      return res.status(400).send(
+        "Product could not be identified."
+      );
+    }
+
+    res.send(`
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Payment Cancelled | Colour by Lines</title>
+<meta name="viewport"
+content="width=device-width, initial-scale=1">
+
+<title>Payment Complete | Colour by Lines</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #fafaf7;
+  color: #202820;
+  text-align: center;
+  padding: 50px 20px;
+}
+
+.box {
+  max-width: 600px;
+  margin: auto;
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  border: 1px solid #ddd;
+}
+
+.success {
+  font-size: 60px;
+}
+
+.download {
+  display: inline-block;
+  margin-top: 25px;
+  padding: 16px 28px;
+  background: #202820;
+  color: white;
+  text-decoration: none;
+  border-radius: 10px;
+  font-weight: bold;
+}
+</style>
 </head>
 
-<body style="font-family:Arial;text-align:center;padding:50px;">
+<body>
 
-<h1>Payment Cancelled</h1>
+<div class="box">
 
-<p>No payment was taken.</p>
+<div class="success">✅</div>
 
-<a href="/">
+<h1>Payment Complete!</h1>
+
+<p>
+Thank you for purchasing from
+<strong>Colour by Lines</strong>.
+</p>
+
+<p>
+Your colouring page is ready.
+</p>
+
+<a
+class="download"
+href="/${product.file}"
+download>
+Download Your Colouring Page
+</a>
+
+<br>
+
+<a href="/" style="display:inline-block;margin-top:25px;color:#202820;">
 Return to Colour by Lines
 </a>
 
+</div>
+
 </body>
 </html>
-  `);
-});
+    `);
 
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(
-    `Colour by Lines running on port ${PORT}`
-  );
+  } catch (error) {
+
+    console.error(
+      "PayPal success error:",
+      error
+    );
+
+    res.status(500).send(
+      "There was a problem completing your payment."
+    );
+  }
 });
