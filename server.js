@@ -9,17 +9,16 @@ app.use(express.static(__dirname));
 
 const PRODUCTS = {
   page1: {
-    name: "John Deere 8R 250 Tractor",
-    price: "1.00",
-    file: "page-1.png"
-  },
+  name: "John Deere 8R 250 Tractor",
+  price: "1.00",
+  file: "page-1-tractor-colouring-page.pdf"
+}
 
   page2: {
-    name: "John Deere 7R Tractor",
-    price: "1.00",
-    file: "page-2.png"
-  }
-};
+  name: "John Deere 8R 250 Tractor",
+  price: "1.00",
+  file: "page-2-tractor-colouring-page.pdf"
+}
 
 const PAYPAL_BASE =
   process.env.PAYPAL_BASE_URL ||
@@ -187,27 +186,16 @@ app.post(
               intent: "CAPTURE",
 
               purchase_units: [
+  {
+    reference_id: productId,
+    description: product.name,
 
-                {
-                  reference_id:
-                    productId,
-
-                  description:
-                    product.name,
-
-                  amount: {
-
-                    currency_code: "USD",
-
-                    value:
-                      Number(product.price)
-                        .toFixed(2)
-
-                  }
-
-                }
-
-              ],
+    amount: {
+      currency_code: "USD",
+      value: Number(product.price).toFixed(2)
+    }
+  }
+],
 
               application_context: {
 
