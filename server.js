@@ -311,177 +311,252 @@ app.post("/api/create-order", async (req, res) => {
 });
 
 
+// ==========================================
 // PAYPAL SUCCESS
-app.get(
-  "/paypal-success",
-  async (req, res) => {
+// ==========================================
 
-    try {
+app.get("/paypal-success", async (req, res) => {
 
-      const orderId =
-        req.query.token;
+  try {
 
-      if (!orderId) {
+    // PayPal sends the order ID as ?token=ORDER_ID
+    const orderId = req.query.token;
 
-        return res.status(400).send(
-          "Missing PayPal order ID."
-        );
-      }
+    if (!orderId) {
+      return res.status(400).send(
+        "Missing PayPal order ID."
+      );
+    }
 
+    console.log(
+      "PayPal customer returned with order:",
+      orderId
+    );
 
-      const clientId =
-        process.env.PAYPAL_CLIENT_ID;
+    const clientId =
+      process.env.PAYPAL_CLIENT_ID;
 
-      const clientSecret =
-        process.env.PAYPAL_CLIENT_SECRET;
+    const clientSecret =
+      process.env.PAYPAL_CLIENT_SECRET;
 
+    if (!clientId || !clientSecret) {
 
-      if (!clientId || !clientSecret) {
-
-        return res.status(500).send(
-          "PayPal is not configured."
-        );
-      }
-
-
-      const auth = Buffer
-        .from(`${clientId}:${clientSecret}`)
-        .toString("base64");
-
-
-      // GET ACCESS TOKEN
-
-      const tokenResponse =
-        await fetch(
-          `${PAYPAL_BASE}/v1/oauth2/token`,
-          {
-            method: "POST",
-
-            headers: {
-              Authorization:
-                `Basic ${auth}`,
-
-              "Content-Type":
-                "application/x-www-form-urlencoded"
-            },
-
-            body:
-              "grant_type=client_credentials"
-          }
-        );
-
-
-      const tokenData =
-        await tokenResponse.json();
-
-
-      if (!tokenResponse.ok) {
-
-        console.error(
-          "PayPal authentication failed:",
-          tokenData
-        );
-
-        return res.status(502).send(
-          "PayPal authentication failed."
-        );
-      }
-
-
-      // CAPTURE PAYMENT
-
-      const captureResponse =
-        await fetch(
-          `${PAYPAL_BASE}/v2/checkout/orders/${orderId}/capture`,
-          {
-            method: "POST",
-
-            headers: {
-              Authorization:
-                `Bearer ${tokenData.access_token}`,
-
-              "Content-Type":
-                "application/json"
-            }
-          }
-        );
-
-
-      const captureData =
-        await captureResponse.json();
-
-
-      if (!captureResponse.ok) {
-
-        console.error(
-          "PayPal capture failed:",
-          captureData
-        );
-
-        return res.status(502).send(
-          "PayPal payment could not be completed."
-        );
-      }
-
-
-      console.log(
-        "PayPal payment status:",
-        captureData.status
+      console.error(
+        "PayPal credentials are missing."
       );
 
+      return res.status(500).send(
+        "PayPal is not configured."
+      );
+    }
 
-      if (
-        captureData.status !==
-        "COMPLETED"
-      ) {
+    // ==========================================
+    // GET PAYPAL ACCESS TOKEN
+    // ==========================================
 
-        return res.status(400).send(`
-          <h1>Payment not completed</h1>
-          <p>
-            PayPal payment status:
-            ${captureData.status}
-          </p>
-          <a href="/">
-            Return to Colour by Lines
-          </a>
-        `);
+    const auth = Buffer
+      .from(`${clientId}:${clientSecret}`)
+      .toString("base64");
+
+    const tokenResponse = await fetch(
+      `${PAYPAL_BASE}/v1/oauth2/token`,
+      {
+        method: "POST",
+
+        headers: {
+          Authorization: `Basic ${auth}`,
+          "Content-Type":
+            "application/x-www-form-urlencoded"
+        },
+
+        body:
+          "grant_type=client_credentials"
       }
+    );
 
+    const tokenText =
+      await tokenResponse.text();
 
-      // FIND PRODUCT
+    let tokenData;
 
-      const productId =
+    try {
+      tokenData =
+        JSON.parse(tokenText);
+    } catch {
+
+      console.error(
+        "Invalid PayPal token response:",
+        tokenText
+      );
+
+      return res.status(502).send(
+        "PayPal returned an invalid authentication response."
+      );
+    }
+
+    if (!tokenResponse.ok) {
+
+      console.error(
+        "PayPal authentication failed:",
+        tokenData
+      );
+
+      return res.status(502).send(
+        "PayPal authentication failed."
+      );
+    }
+
+    const accessToken =
+      tokenData.access_token;
+
+    // ==========================================
+    // CAPTURE PAYPAL ORDER
+    // ==========================================
+
+    console.log(
+      "Capturing PayPal order:",
+      orderId
+    );
+
+    const captureResponse =
+      await fetch(
+        `${PAYPAL_BASE}/v2/checkout/orders/${orderId}/capture`,
+        {
+          method: "POST",
+
+          headers: {
+            Authorization:
+              `Bearer ${accessToken}`,
+
+            "Content-Type":
+              "application/json"
+          },
+
+          body: "{}"
+        }
+      );
+
+    const captureText =
+      await captureResponse.text();
+
+    let captureData;
+
+    try {
+      captureData =
+        JSON.parse(captureText);
+    } catch {
+
+      console.error(
+        "Invalid PayPal capture response:",
+        captureText
+      );
+
+      return res.status(502).send(
+        "PayPal returned an invalid payment response."
+      );
+    }
+
+    if (!captureResponse.ok) {
+
+      console.error(
+        "PayPal capture failed:",
         captureData
-          .purchase_units?.[0]
-          ?.reference_id;
+      );
 
+      return res.status(502).send(
+        "PayPal payment could not be completed."
+      );
+    }
 
-      const product =
-        PRODUCTS[productId];
+    console.log(
+      "PayPal capture status:",
+      captureData.status
+    );
 
+    // ==========================================
+    // MAKE SURE PAYMENT COMPLETED
+    // ==========================================
 
-      if (!product) {
+    if (
+      captureData.status !==
+      "COMPLETED"
+    ) {
 
-        console.error(
-          "Product not found:",
-          productId
-        );
+      return res.status(400).send(`
+<!DOCTYPE html>
 
-        return res.status(400).send(
-          "Product could not be identified."
-        );
-      }
+<html>
 
+<head>
 
-      console.log(
-        "Customer purchased:",
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1"
+>
+
+<title>
+Payment Not Completed
+</title>
+
+</head>
+
+<body>
+
+<h1>
+Payment not completed
+</h1>
+
+<p>
+PayPal payment status:
+${captureData.status}
+</p>
+
+<a href="/">
+Return to Colour by Lines
+</a>
+
+</body>
+
+</html>
+      `);
+    }
+
+    // ==========================================
+    // FIND PRODUCT
+    // ==========================================
+
+    const productId =
+      captureData
+        .purchase_units?.[0]
+        ?.reference_id;
+
+    console.log(
+      "Purchased product:",
+      productId
+    );
+
+    const product =
+      PRODUCTS[productId];
+
+    if (!product) {
+
+      console.error(
+        "Product not found:",
         productId
       );
 
+      return res.status(400).send(
+        "Product could not be identified."
+      );
+    }
 
-      // SUCCESS PAGE
+    // ==========================================
+    // SUCCESS PAGE
+    // ==========================================
 
-      res.send(`
+    res.send(`
 <!DOCTYPE html>
 
 <html>
@@ -506,14 +581,14 @@ body {
   background: #fafaf7;
   color: #202820;
   text-align: center;
-  padding: 50px 20px;
+  padding: 40px 20px;
 }
 
 .box {
   max-width: 600px;
   margin: auto;
   background: white;
-  padding: 40px;
+  padding: 40px 25px;
   border-radius: 20px;
   border: 1px solid #ddd;
 }
@@ -522,14 +597,18 @@ body {
   font-size: 60px;
 }
 
+h1 {
+  font-size: 42px;
+}
+
 .download {
   display: inline-block;
   margin-top: 25px;
-  padding: 16px 28px;
+  padding: 18px 30px;
   background: #202820;
   color: white;
   text-decoration: none;
-  border-radius: 10px;
+  border-radius: 12px;
   font-weight: bold;
   font-size: 18px;
 }
@@ -573,8 +652,7 @@ Your colouring page is ready.
 
 <a
 class="download"
-href="/${product.file}"
-download
+href="/download/${productId}"
 >
 Download Your Colouring Page
 </a>
@@ -593,23 +671,23 @@ Return to Colour by Lines
 </body>
 
 </html>
-      `);
+    `);
 
-
-    } catch (error) {
-
-      console.error(
-        "PayPal success error:",
-        error
-      );
-
-      return res.status(500).send(
-        "There was a problem completing your payment."
-      );
-    }
   }
-);
 
+  catch (error) {
+
+    console.error(
+      "PAYPAL SUCCESS ERROR:",
+      error
+    );
+
+    return res.status(500).send(
+      "There was a problem completing your payment."
+    );
+  }
+
+});
 
 // PAYPAL CANCEL
 app.get(
