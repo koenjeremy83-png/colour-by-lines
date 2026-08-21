@@ -311,10 +311,11 @@ $1.00
 </div>
 
 <button
-class="buy"
-onclick="buyProduct('page1', this)"
->
-Buy & Download
+<button
+  type="button"
+  class="btn"
+  onclick="buyProduct('page1', this)">
+  Buy & Download
 </button>
 
 </div>
@@ -351,10 +352,10 @@ $1.00
 </div>
 
 <button
-class="buy"
-onclick="buyProduct('page2', this)"
->
-Buy & Download
+  type="button"
+  class="btn"
+  onclick="buyProduct('page2', this)">
+  Buy & Download
 </button>
 
 </div>
@@ -455,67 +456,14 @@ Download. Print. Colour.
 
 <script>
 
-async function buyProduct(product, button){
-
-button.disabled=true;
-
-button.textContent="Opening checkout...";
-
-try{
-
-const response=await fetch(
-"/api/create-order",
-{
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body:JSON.stringify({
-product:product
-})
-}
-);
-
-const text = await response.text();
-
-let data;
-
-try {
-  data = JSON.parse(text);
-} catch (error) {
-  throw new Error("The checkout server returned an unexpected response.");
-}
-
-if(!response.ok){
-
-throw new Error(
-data.error ||
-"Checkout could not be started."
-);
-
-}
-
-window.location.href=data.approvalUrl;
-
-}catch(error){
-
-alert(error.message);
-
-button.disabled=false;
-
-button.textContent="Buy & Download";
-
-}
-
-}
-
-<script>
-async function buyProduct(product, button){
+  <script>
+async function buyProduct(product, button) {
 
   button.disabled = true;
-  button.textContent = "Opening checkout...";
+  button.textContent = "Opening PayPal...";
 
   try {
+
     const response = await fetch("/api/create-order", {
       method: "POST",
       headers: {
@@ -544,6 +492,12 @@ async function buyProduct(product, button){
       );
     }
 
+    if (!data.approvalUrl) {
+      throw new Error(
+        "PayPal checkout link was not returned."
+      );
+    }
+
     window.location.href = data.approvalUrl;
 
   } catch (error) {
@@ -552,6 +506,8 @@ async function buyProduct(product, button){
 
     button.disabled = false;
     button.textContent = "Buy & Download";
+
   }
+
 }
 </script>
