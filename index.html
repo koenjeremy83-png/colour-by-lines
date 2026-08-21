@@ -312,7 +312,7 @@ $1.00
 
 <button
   type="button"
-  class="btn"
+  class="buy"
   onclick="buyProduct('page1', this)">
   Buy & Download
 </button>
@@ -352,7 +352,7 @@ $1.00
 
 <button
   type="button"
-  class="btn"
+  class="buy"
   onclick="buyProduct('page2', this)">
   Buy & Download
 </button>
@@ -455,12 +455,10 @@ Download. Print. Colour.
 
 <script>
 async function buyProduct(product, button) {
-
   button.disabled = true;
   button.textContent = "Opening PayPal...";
 
   try {
-
     const response = await fetch("/api/create-order", {
       method: "POST",
       headers: {
@@ -498,6 +496,7 @@ async function buyProduct(product, button) {
     window.location.href = data.approvalUrl;
 
   } catch (error) {
+    console.error("Checkout error:", error);
 
     alert(error.message);
 
@@ -505,7 +504,7 @@ async function buyProduct(product, button) {
     button.textContent = "Buy & Download";
   }
 }
-</script>
+  </script>
 
 </body>
 </html>
